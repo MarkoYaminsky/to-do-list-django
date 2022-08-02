@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from rest_framework.authtoken.models import Token
 
 
 class UserManager(BaseUserManager):
@@ -13,6 +14,7 @@ class UserManager(BaseUserManager):
 
         user = self.model(username=username)
         user.set_password(password)
+        user.token = Token.objects.create(user=user)
         user.save()
 
         return user
@@ -36,6 +38,8 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=128)
+    token = models.CharField(max_length=128)
     is_staff = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'username'
     objects = UserManager()
