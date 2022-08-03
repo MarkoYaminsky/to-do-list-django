@@ -1,13 +1,26 @@
+import os
 from decouple import config
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IS_HEROKU = "DYNO" in os.environ
+
 SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = True
+if 'SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = []
+DEBUG = False
+
+if IS_HEROKU:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ['127.0.0.1']
+
+if not IS_HEROKU:
+    DEBUG = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,11 +65,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'to_do_list_django.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
