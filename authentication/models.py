@@ -14,7 +14,6 @@ class UserManager(BaseUserManager):
 
         user = self.model(username=username)
         user.set_password(password)
-        user.token = Token.objects.create(user=user)
         user.save()
 
         return user
@@ -31,15 +30,21 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.is_staff = True
         user.save()
-
         return user
 
 
 class User(AbstractBaseUser):
     username = models.CharField(max_length=20, unique=True)
     password = models.CharField(max_length=128)
-    token = models.CharField(max_length=128)
     is_staff = models.BooleanField(default=False)
+
+    def _generate_token(self):
+        token = Token.objects.create(user_id=self.id)
+        return token
+
+    @property
+    def token(self):
+        return self._generate_token
 
     USERNAME_FIELD = 'username'
     objects = UserManager()
