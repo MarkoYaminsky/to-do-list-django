@@ -32,7 +32,11 @@ class LoginAPIView(CreateAPIView):
         user = authenticate(username=data['username'], password=data['password'])
 
         if not user:
-            return Response("404 USER NOT FOUND", status=status.HTTP_404_NOT_FOUND)
+            try:
+                User.objects.get(username=data['username'])
+            except User.DoesNotExist:
+                return Response("404 User not found", status=status.HTTP_404_NOT_FOUND)
+            return Response("Invalid password", status=status.HTTP_400_BAD_REQUEST)
 
-        token = Token.objects.get(user=user).key
-        return Response(token, status=status.HTTP_200_OK)
+        token = Token.objects.get(user=user)
+        return Response({"token": token.key}, status=status.HTTP_200_OK)
