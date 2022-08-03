@@ -64,7 +64,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'to_do_list_django.wsgi.application'
 
-DATABASES = {
+if IS_HEROKU:
+    DATABASE_URL = 'postgresql://postgresql-convex-04183'
+else:
+    DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+
+if IS_HEROKU:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgresql',
+        }
+    }
+else:
+    DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
