@@ -17,7 +17,7 @@ DEBUG = False
 if IS_HEROKU:
     ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = ['127.0.0.1']
+    ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
 if not IS_HEROKU:
     DEBUG = True
@@ -42,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'to_do_list_django.urls'
@@ -73,7 +74,11 @@ if IS_HEROKU:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgresql',
+            'NAME': 'dd2ts6g9205tvp',
+            'HOST': 'ec2-176-34-215-248.eu-west-1.compute.amazonaws.com',
+            'PORT': 5432,
+            'USER': 'izmuulvcaoohop',
+            'PASSWORD': '8f362f258de7889f3393463cf10e94b8d3571b7f2f6f058da69d42cec3312241'
         }
     }
 else:

@@ -1,1 +1,1 @@
-web: gunicorn vision.wsgi --log-file -
+web: gunicorn to_do_list_django.wsgi --log-file -
