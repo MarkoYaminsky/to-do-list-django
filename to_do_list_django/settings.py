@@ -1,13 +1,26 @@
+import os
 from decouple import config
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IS_HEROKU = "DYNO" in os.environ
+
 SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = True
+if 'SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = []
+DEBUG = False
+
+if IS_HEROKU:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
+
+if not IS_HEROKU:
+    DEBUG = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -29,6 +42,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'to_do_list_django.urls'
@@ -51,12 +65,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'to_do_list_django.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if IS_HEROKU:
+    DATABASE_URL = 'postgresql://postgresql-convex-04183'
+else:
+    DATABASE_URL = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+
+if IS_HEROKU:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'dd2ts6g9205tvp',
+            'HOST': 'ec2-176-34-215-248.eu-west-1.compute.amazonaws.com',
+            'PORT': 5432,
+            'USER': 'izmuulvcaoohop',
+            'PASSWORD': '8f362f258de7889f3393463cf10e94b8d3571b7f2f6f058da69d42cec3312241'
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
