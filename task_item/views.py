@@ -50,7 +50,7 @@ class TaskItemDeleteAPIView(APIView):
 
         task.delete()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TaskItemPatchAPIView(APIView):
@@ -70,4 +70,4 @@ class TaskItemPatchAPIView(APIView):
 
         serializer.update(task, data)
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
