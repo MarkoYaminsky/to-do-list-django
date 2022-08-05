@@ -19,6 +19,11 @@ if IS_HEROKU:
 else:
     ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
+if IS_HEROKU:
+    ALLOWED_HOSTS = ["*"]
+else:
+    ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
+
 if not IS_HEROKU:
     DEBUG = True
 
