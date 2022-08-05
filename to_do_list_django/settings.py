@@ -24,8 +24,8 @@ if IS_HEROKU:
 else:
     ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
-# if IS_HEROKU:
-#     DEBUG = False
+if IS_HEROKU:
+    DEBUG = False
 
 INSTALLED_APPS = [
     'django.contrib.admin',
