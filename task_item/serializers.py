@@ -5,7 +5,8 @@ from .models import TaskItem
 class TaskItemCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskItem
-        fields = ('color', 'name', 'task_value')
+        fields = ('color', 'name', 'task_value', 'id')
+        extra_kwargs = {'id': {'read_only': True}}
 
 
 class TaskItemPatchSerializer(serializers.ModelSerializer):
