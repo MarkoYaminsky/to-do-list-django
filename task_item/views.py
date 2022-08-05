@@ -46,7 +46,7 @@ class TaskItemDeleteAPIView(APIView):
         try:
             task = self.queryset.filter(user=user).get(id=pk)
         except TaskItem.DoesNotExist:
-            return Response({"detail": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "Task not found"}, status=status.HTTP_400_BAD_REQUEST)
 
         task.delete()
 
@@ -66,7 +66,7 @@ class TaskItemPatchAPIView(APIView):
         try:
             task = self.queryset.filter(user=user).get(id=pk)
         except TaskItem.DoesNotExist:
-            return Response({"detail": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "Task not found"}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer.update(task, data)
 
