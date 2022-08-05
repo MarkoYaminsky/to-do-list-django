@@ -1,5 +1,5 @@
 from django.db import models
-from authentication.models import User
+from to_do_list_django.apps.authentication import User
 
 
 class TaskItem(models.Model):

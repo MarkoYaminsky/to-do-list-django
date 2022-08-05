@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
-    'authentication',
-    'task_item',
+    'to_do_list_django.apps.authentication',
+    'to_do_list_django.apps.task_item',
 ]
 
 MIDDLEWARE = [
