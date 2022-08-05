@@ -40,7 +40,7 @@ class TaskItemDeleteAPIView(APIView):
     permission_classes = (IsAuthenticated,)
     queryset = TaskItem.objects.all()
 
-    def delete(self, request, pk):
+    def destroy(self, request, pk):
         user = request.user
 
         try:
@@ -58,7 +58,7 @@ class TaskItemPatchAPIView(APIView):
     permission_classes = (IsAuthenticated,)
     queryset = TaskItem.objects.all()
 
-    def patch(self, request, pk):
+    def partial_update(self, request, pk):
         data = request.data
         user = request.user
         serializer = self.serializer()
