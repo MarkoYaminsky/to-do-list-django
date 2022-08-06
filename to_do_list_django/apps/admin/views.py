@@ -22,9 +22,9 @@ class AdminUserRegistrationAPIView(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        token = User.objects.get(username=user.username).token()
+        token = User.objects.get(username=user.username).token
 
-        return Response({"username": user.username, "token": token.key}, status=status.HTTP_201_CREATED)
+        return Response({"username": user.username, "token": token}, status=status.HTTP_201_CREATED)
 
 
 class UserListAPIView(generics.ListAPIView):
