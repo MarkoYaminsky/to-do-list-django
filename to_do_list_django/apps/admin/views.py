@@ -1,13 +1,14 @@
 from rest_framework import status, generics
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
 from . import serializers
+from to_do_list_django.settings import SECRET_KEY
 from ..authentication.models import User
-from ...settings import SECRET_KEY
 
 
-class AdminUserCreateAPIView(generics.CreateAPIView):
+class AdminUserRegistrationAPIView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = serializers.AdminUserRegistrationSerializer
 
@@ -19,11 +20,15 @@ class AdminUserCreateAPIView(generics.CreateAPIView):
 
         serializer = self.serializer_class(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        user = serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        token = User.objects.get(username=user.username).token()
+
+        return Response({"username": user.username, "token": token.key}, status=status.HTTP_201_CREATED)
 
 
 class UserListAPIView(generics.ListAPIView):
     permission_classes = (IsAdminUser,)
     serializer_class = serializers.UserListSerializer
+    queryset = User.objects.all()
+

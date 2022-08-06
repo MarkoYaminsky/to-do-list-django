@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from rest_framework.authtoken.models import Token
 
@@ -38,13 +38,14 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=128)
     is_staff = models.BooleanField(default=False)
 
-    def _generate_token(self):
-        token = Token.objects.create(user_id=self.id)
-        return token
+    def get_or_create_token(self):
+        try:
+            token = Token.objects.create(user_id=self.id)
+            return token.key
+        except IntegrityError:
+            token = Token.objects.get(user=self)
+            return token.key
 
-    @property
-    def token(self):
-        return self._generate_token
-
+    token = property(get_or_create_token)
     USERNAME_FIELD = 'username'
     objects = UserManager()

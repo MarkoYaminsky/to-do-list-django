@@ -3,9 +3,11 @@ from .models import User
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    token = serializers.ReadOnlyField()
+
     class Meta:
         model = User
-        fields = ('username', 'password')
+        fields = ('username', 'password', 'token')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
