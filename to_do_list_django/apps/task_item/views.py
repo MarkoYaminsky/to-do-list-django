@@ -36,8 +36,9 @@ class TaskItemListCreateAPIView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TaskItemDeleteAPIView(APIView):
+class TaskItemPatchDeleteAPIView(APIView):
     permission_classes = (IsAuthenticated,)
+    patch_serializer = TaskItemPatchSerializer
     queryset = TaskItem.objects.all()
 
     def delete(self, request, pk):
@@ -52,16 +53,10 @@ class TaskItemDeleteAPIView(APIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class TaskItemPatchAPIView(APIView):
-    serializer = TaskItemPatchSerializer
-    permission_classes = (IsAuthenticated,)
-    queryset = TaskItem.objects.all()
-
     def patch(self, request, pk):
         data = request.data
         user = request.user
-        serializer = self.serializer()
+        serializer = self.patch_serializer()
 
         try:
             task = self.queryset.filter(user=user).get(id=pk)
