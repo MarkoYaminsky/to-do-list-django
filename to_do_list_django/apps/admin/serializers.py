@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..authentication.models import User
+from to_do_list_django.apps.authentication.models import User
 
 
 class UserListSerializer(serializers.ModelSerializer):
