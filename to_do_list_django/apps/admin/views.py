@@ -1,7 +1,7 @@
 from rest_framework import status, generics
-from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from . import serializers
 from to_do_list_django.settings import SECRET_KEY
@@ -30,5 +30,45 @@ class AdminUserRegistrationAPIView(generics.CreateAPIView):
 class UserListAPIView(generics.ListAPIView):
     permission_classes = (IsAdminUser,)
     serializer_class = serializers.UserListSerializer
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+
+        username = self.request.query_params.get('username')
+        if username:
+            queryset = queryset.filter(username__contains=username)
+
+        return queryset
+
+
+class UserRetrieveDeleteAPIView(APIView):
+    permission_classes = (IsAdminUser,)
     queryset = User.objects.all()
 
+    def get(self, request, pk):
+        user = self.queryset.get(id=pk)
+        serializer = serializers.UserListSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        try:
+            user = self.queryset.get(id=pk)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+
+        if user.is_staff is False:
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        try:
+            secret_key = data['SECRET_KEY']
+        except KeyError:
+            return Response({"detail": "Please provide SECRET_KEY in the request body to delete admin"})
+
+        if secret_key == SECRET_KEY:
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response({"detail": "Invalid secret key"}, status=status.HTTP_403_FORBIDDEN)
