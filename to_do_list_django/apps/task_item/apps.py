@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AuthenticationConfig(AppConfig):
+class TaskItemConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'authentication'
+    name = 'to_do_list_django.apps.task_item'

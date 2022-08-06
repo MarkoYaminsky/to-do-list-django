@@ -1,6 +1,6 @@
 from django.urls import path
 
-from task_item import views
+from to_do_list_django.apps.task_item import views
 
 urlpatterns = [
     path('taskitems', views.TaskItemListCreateAPIView.as_view()),

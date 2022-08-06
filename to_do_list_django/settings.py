@@ -1,7 +1,6 @@
 import os
 from decouple import config
 from pathlib import Path
-import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,6 +26,8 @@ else:
 if IS_HEROKU:
     DEBUG = False
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,12 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
 
-    'authentication',
-    'task_item',
+    'to_do_list_django.apps.authentication',
+    'to_do_list_django.apps.task_item',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

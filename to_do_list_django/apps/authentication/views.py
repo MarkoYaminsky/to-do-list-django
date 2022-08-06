@@ -9,7 +9,7 @@ from .models import User
 from .serializers import UserRegistrationSerializer
 
 
-class RegistrationAPIView(CreateAPIView):
+class UserRegistrationAPIView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
 
@@ -20,13 +20,12 @@ class RegistrationAPIView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response({
-            "username": data['username'],
-            "token": User.objects.get(username=data['username']).token().key
-        }, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class LoginAPIView(CreateAPIView):
+class UserLoginAPIView(CreateAPIView):
+    permission_classes = (AllowAny,)
+
     def create(self, request, *args, **kwargs):
         data = request.data
         user = authenticate(username=data['username'], password=data['password'])
@@ -38,5 +37,5 @@ class LoginAPIView(CreateAPIView):
                 return Response("404 User not found", status=status.HTTP_404_NOT_FOUND)
             return Response("Invalid password", status=status.HTTP_400_BAD_REQUEST)
 
-        token = Token.objects.get(user=user)
-        return Response({"token": token.key}, status=status.HTTP_200_OK)
+        token = user.token
+        return Response({"token": token, "username": user.username}, status=status.HTTP_200_OK)
