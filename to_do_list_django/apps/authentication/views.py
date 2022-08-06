@@ -6,11 +6,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .models import User
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationLoginSerializer
 
 
 class UserRegistrationAPIView(CreateAPIView):
-    serializer_class = UserRegistrationSerializer
+    serializer_class = UserRegistrationLoginSerializer
     permission_classes = (AllowAny,)
 
     def create(self, request, *args, **kwargs):
@@ -25,6 +25,7 @@ class UserRegistrationAPIView(CreateAPIView):
 
 class UserLoginAPIView(CreateAPIView):
     permission_classes = (AllowAny,)
+    serializer_class = UserRegistrationLoginSerializer
 
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -37,5 +38,5 @@ class UserLoginAPIView(CreateAPIView):
                 return Response("404 User not found", status=status.HTTP_404_NOT_FOUND)
             return Response("Invalid password", status=status.HTTP_400_BAD_REQUEST)
 
-        token = user.token
-        return Response({"token": token, "username": user.username}, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)

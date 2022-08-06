@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from to_do_list_django.apps.authentication.models import User
-from to_do_list_django.apps.authentication.serializers import UserRegistrationSerializer
+from to_do_list_django.apps.authentication.serializers import UserRegistrationLoginSerializer
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -12,6 +12,6 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'is_staff', 'token')
 
 
-class AdminUserRegistrationSerializer(UserRegistrationSerializer):
+class AdminUserRegistrationSerializer(UserRegistrationLoginSerializer):
     def create(self, validated_data):
         return User.objects.create_superuser(username=validated_data['username'], password=validated_data['password'])

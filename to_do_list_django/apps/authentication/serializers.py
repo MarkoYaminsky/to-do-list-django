@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import User
 
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
+class UserRegistrationLoginSerializer(serializers.ModelSerializer):
     token = serializers.ReadOnlyField()
 
     class Meta:
