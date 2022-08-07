@@ -1,3 +1,4 @@
+from django.shortcuts import redirect, get_object_or_404
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -25,7 +26,7 @@ class TaskItemListCreateAPIView(ListCreateAPIView):
 
         user.taskitem_set.add(item)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return redirect('/taskitems')
 
     def list(self, request, *args, **kwargs):
         user = request.user
@@ -44,25 +45,18 @@ class TaskItemPatchDeleteAPIView(APIView):
     def delete(self, request, pk):
         user = request.user
 
-        try:
-            task = self.queryset.filter(user=user).get(id=pk)
-        except TaskItem.DoesNotExist:
-            return Response({"detail": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
-
+        task = get_object_or_404(self.queryset.filter(user=user), id=pk)
         task.delete()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return redirect('/taskitems')
 
     def patch(self, request, pk):
         data = request.data
         user = request.user
         serializer = self.patch_serializer()
 
-        try:
-            task = self.queryset.filter(user=user).get(id=pk)
-        except TaskItem.DoesNotExist:
-            return Response({"detail": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+        task = get_object_or_404(self.queryset.filter(user=user), id=pk)
 
         serializer.update(task, data)
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return redirect('/taskitems')
