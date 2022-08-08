@@ -48,7 +48,7 @@ class TaskItemPatchDeleteAPIView(APIView):
         task = get_object_or_404(self.queryset.filter(user=user), id=pk)
         task.delete()
 
-        return redirect('/taskitems')
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def patch(self, request, pk):
         data = request.data
@@ -59,4 +59,4 @@ class TaskItemPatchDeleteAPIView(APIView):
 
         serializer.update(task, data)
 
-        return redirect('/taskitems')
+        return Response(status=status.HTTP_204_NO_CONTENT)
