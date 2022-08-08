@@ -58,5 +58,5 @@ class TaskItemPatchDeleteAPIView(APIView):
         task = get_object_or_404(self.queryset.filter(user=user), id=pk)
 
         serializer.update(task, data)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = self.patch_serializer(task)
+        return Response(serializer.data, status=status.HTTP_200_OK)
