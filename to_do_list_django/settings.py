@@ -84,13 +84,14 @@ if IS_HEROKU:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'dd2ts6g9205tvp',
-            'HOST': 'ec2-176-34-215-248.eu-west-1.compute.amazonaws.com',
+            'NAME': 'hfpcivjvbjgeyt',
+            'HOST': 'ec2-54-220-255-121.eu-west-1.compute.amazonaws.com',
             'PORT': 5432,
-            'USER': 'izmuulvcaoohop',
-            'PASSWORD': '8f362f258de7889f3393463cf10e94b8d3571b7f2f6f058da69d42cec3312241'
+            'USER': 'd5heij8lqbqjj3',
+            'PASSWORD': 'e2c18eac94a2ffb4ad6017e7fab8f2b356401e977136d6ce10601d488055ecf6'
         }
     }
+    # postgres://hfpcivjvbjgeyt:e2c18eac94a2ffb4ad6017e7fab8f2b356401e977136d6ce10601d488055ecf6@ec2-54-220-255-121.eu-west-1.compute.amazonaws.com:5432/d5heij8lqbqjj3
 else:
     DATABASES = {
         'default': {
