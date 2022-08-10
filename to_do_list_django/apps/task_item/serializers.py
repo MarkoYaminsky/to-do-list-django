@@ -12,7 +12,7 @@ class TaskItemCreateSerializer(serializers.ModelSerializer):
 class TaskItemPatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskItem
-        fields = ('is_done', 'name', 'color', 'task_value')
+        fields = ('is_done', 'name', 'color', 'task_value', 'id')
 
     def update(self, instance, validated_data):
         for key, value in validated_data.items():
