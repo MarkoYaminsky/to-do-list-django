@@ -1,3 +1,4 @@
+from django.shortcuts import redirect, get_object_or_404
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -25,7 +26,7 @@ class TaskItemListCreateAPIView(ListCreateAPIView):
 
         user.taskitem_set.add(item)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return redirect('/taskitems')
 
     def list(self, request, *args, **kwargs):
         user = request.user
@@ -36,38 +37,26 @@ class TaskItemListCreateAPIView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class TaskItemDeleteAPIView(APIView):
+class TaskItemPatchDeleteAPIView(APIView):
     permission_classes = (IsAuthenticated,)
+    patch_serializer = TaskItemPatchSerializer
     queryset = TaskItem.objects.all()
 
     def delete(self, request, pk):
         user = request.user
 
-        try:
-            task = self.queryset.filter(user=user).get(id=pk)
-        except TaskItem.DoesNotExist:
-            return Response({"detail": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
-
+        task = get_object_or_404(self.queryset.filter(user=user), id=pk)
         task.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class TaskItemPatchAPIView(APIView):
-    serializer = TaskItemPatchSerializer
-    permission_classes = (IsAuthenticated,)
-    queryset = TaskItem.objects.all()
-
     def patch(self, request, pk):
         data = request.data
         user = request.user
-        serializer = self.serializer()
+        serializer = self.patch_serializer()
 
-        try:
-            task = self.queryset.filter(user=user).get(id=pk)
-        except TaskItem.DoesNotExist:
-            return Response({"detail": "Task not found"}, status=status.HTTP_404_NOT_FOUND)
+        task = get_object_or_404(self.queryset.filter(user=user), id=pk)
 
         serializer.update(task, data)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = self.patch_serializer(task)
+        return Response(serializer.data, status=status.HTTP_200_OK)
